@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DocReview – Login / Register | Graphic Era Hospital</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --primary:       #0a5eb0;
+      --primary-dark:  #063d7a;
+      --primary-light: #e8f1fb;
+      --accent:        #00c9a7;
+      --accent-warm:   #f59e0b;
+      --danger:        #ef4444;
+      --success:       #10b981;
+      --text-dark:     #0f172a;
+      --text-mid:      #334155;
+      --text-light:    #64748b;
+      --white:         #ffffff;
+      --bg:            #f0f6ff;
+      --border:        #dbeafe;
+      --radius:        20px;
+      --radius-sm:     12px;
+      --shadow:        0 24px 64px rgba(10,94,176,0.16);
+      --tr:            0.3s cubic-bezier(.4,0,.2,1);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html,body { height:100%; }
+    body {
+      font-family:'Poppins',sans-serif;
+      min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      overflow-x:hidden;
+    }
+
+    /* ── Background ── */
+    .bg-layer {
+      position:fixed; inset:0; z-index:0;
+      background:linear-gradient(135deg,#0a3d6b 0%,#0a5eb0 50%,#1a7bd5 80%,#00c9a7 100%);
+      overflow:hidden;
+    }
+    .bg-layer::before {
+      content:''; position:absolute; inset:0;
+      background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .blob { position:absolute; border-radius:50%; filter:blur(70px); opacity:.22; animation:pulse 9s ease-in-out infinite; }
+    .b1 { width:520px;height:520px;background:#00c9a7;top:-160px;right:-110px; }
+    .b2 { width:420px;height:420px;background:#fff;bottom:-130px;left:-90px;animation-delay:-3s; }
+    .b3 { width:320px;height:320px;background:#f59e0b;top:45%;left:48%;animation-delay:-5.5s; }
+    @keyframes pulse {
+      0%,100%{transform:scale(1) translate(0,0);}
+      33%{transform:scale(1.09) translate(18px,-18px);}
+      66%{transform:scale(0.94) translate(-14px,14px);}
+    }
+
+    /* ── Page wrapper ── */
+    .pw {
+      position:relative; z-index:1; width:100%; min-height:100vh;
+      display:flex; align-items:center; justify-content:center; padding:32px 16px;
+    }
+
+    /* ── Card ── */
+    .card {
+      display:flex; width:100%; max-width:980px; min-height:610px;
+      border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
+      animation:slideUp .65s cubic-bezier(.4,0,.2,1) both;
+    }
+    @keyframes slideUp {
+      from{opacity:0;transform:translateY(40px);}
+      to  {opacity:1;transform:translateY(0);}
+    }
+
+    /* ── Left panel ── */
+    .lp {
+      flex:1;
+      background:linear-gradient(160deg,#0a3d6b 0%,#0a5eb0 58%,#1a7bd5 100%);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:56px 40px; position:relative; overflow:hidden;
+    }
+    .lp::before{content:'';position:absolute;width:290px;height:290px;border-radius:50%;background:rgba(255,255,255,.05);top:-85px;right:-85px;}
+    .lp::after {content:'';position:absolute;width:200px;height:200px;border-radius:50%;background:rgba(0,201,167,.10);bottom:-55px;left:-38px;}
+    .lp-logo{width:70px;height:70px;border-radius:20px;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;margin-bottom:22px;position:relative;z-index:1;backdrop-filter:blur(10px);}
+    .lp-title{font-family:'Playfair Display',serif;font-size:1.9rem;color:#fff;text-align:center;line-height:1.3;margin-bottom:10px;position:relative;z-index:1;}
+    .lp-title span{font-style:italic;color:var(--accent);}
+    .lp-sub{font-size:.83rem;color:rgba(255,255,255,.70);text-align:center;line-height:1.75;max-width:260px;margin-bottom:34px;position:relative;z-index:1;}
+    .lp-feats{display:flex;flex-direction:column;gap:13px;width:100%;position:relative;z-index:1;}
+    .lp-feat{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-sm);padding:12px 15px;backdrop-filter:blur(6px);}
+    .lp-feat i{width:32px;height:32px;border-radius:9px;background:rgba(0,201,167,.2);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+    .lp-feat span{font-size:.80rem;color:rgba(255,255,255,.85);font-weight:500;}
+    .lp-badge{margin-top:26px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);padding:8px 16px;border-radius:50px;font-size:.74rem;color:rgba(255,255,255,.80);position:relative;z-index:1;}
+    .lp-badge i{color:var(--accent);}
+
+    /* ── Right panel ── */
+    .rp { flex:1.1; background:#fff; display:flex; flex-direction:column; justify-content:center; padding:48px 46px; }
+
+    /* ── DB pill ── */
+    .db-pill{display:inline-flex;align-items:center;gap:6px;background:#ecfdf5;color:#059669;border:1px solid #a7f3d0;padding:4px 13px;border-radius:50px;font-size:.72rem;font-weight:600;margin-bottom:22px;}
+    .db-pill i{font-size:9px;animation:blink 1.6s ease infinite;}
+    @keyframes blink{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+    /* ── Tabs ── */
+    .tabs{display:flex;background:var(--bg);border-radius:var(--radius-sm);padding:5px;margin-bottom:32px;gap:4px;}
+    .tab{flex:1;padding:11px;text-align:center;font-size:.88rem;font-weight:600;border-radius:9px;cursor:pointer;transition:all var(--tr);color:var(--text-light);user-select:none;}
+    .tab.active{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(10,94,176,.28);}
+    .tab:not(.active):hover{background:var(--primary-light);color:var(--primary);}
+
+    /* ── Form header ── */
+    .fh{margin-bottom:24px;}
+    .fh h2{font-size:1.6rem;font-weight:800;color:var(--text-dark);margin-bottom:5px;line-height:1.2;}
+    .fh p{font-size:.83rem;color:var(--text-light);}
+
+    /* ── Panels ── */
+    .panel{display:none;animation:fade .4s cubic-bezier(.4,0,.2,1) both;}
+    .panel.active{display:block;}
+    @keyframes fade{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:translateX(0);}}
+
+    /* ── Input groups ── */
+    .ig{margin-bottom:16px;}
+    .ig label{display:block;font-size:.78rem;font-weight:600;color:var(--text-mid);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+    .iw{position:relative;}
+    .iw .ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:14px;pointer-events:none;transition:color var(--tr);}
+    .iw input{width:100%;padding:12px 42px 12px 40px;border:1.8px solid var(--border);border-radius:var(--radius-sm);font-size:.88rem;font-family:'Poppins',sans-serif;color:var(--text-dark);background:#fff;outline:none;transition:all var(--tr);}
+    .iw input::placeholder{color:#b0bec5;}
+    .iw input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(10,94,176,.10);}
+    .iw input:focus ~ .ico{color:var(--primary);}
+    .iw input.ef{border-color:var(--danger);box-shadow:0 0 0 3px rgba(239,68,68,.10);}
+    .iw input.sf{border-color:var(--success);box-shadow:0 0 0 3px rgba(16,185,129,.10);}
+    .eye{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--text-light);cursor:pointer;font-size:14px;z-index:2;transition:color var(--tr);}
+    .eye:hover{color:var(--primary);}
+    .fm{font-size:.73rem;margin-top:5px;display:none;align-items:center;gap:5px;}
+    .fm.show{display:flex;}
+    .fm.err{color:var(--danger);}
+    .fm.ok {color:var(--success);}
+
+    /* ── Password strength ── */
+    .pws{margin-top:7px;display:none;}
+    .pws.show{display:block;}
+    .bars{display:flex;gap:4px;margin-bottom:4px;}
+    .bar{height:4px;flex:1;border-radius:2px;background:var(--border);transition:background var(--tr);}
+    .bar.w{background:var(--danger);}
+    .bar.m{background:var(--accent-warm);}
+    .bar.s{background:var(--success);}
+    .pw-lbl{font-size:.72rem;font-weight:600;color:var(--text-light);}
+    .pw-lbl.w{color:var(--danger);}
+    .pw-lbl.m{color:var(--accent-warm);}
+    .pw-lbl.s{color:var(--success);}
+
+    /* ── Submit button ── */
+    .btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--primary),#1a7bd5);color:#fff;border:none;border-radius:var(--radius-sm);font-size:.93rem;font-weight:700;font-family:'Poppins',sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(10,94,176,.30);transition:all var(--tr);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;position:relative;overflow:hidden;}
+    .btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#1a7bd5,var(--accent));opacity:0;transition:opacity var(--tr);}
+    .btn:hover:not(:disabled)::before{opacity:1;}
+    .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(10,94,176,.38);}
+    .btn:disabled{opacity:.65;cursor:not-allowed;}
+    .btn>*{position:relative;z-index:1;}
+    .spin{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none;}
+    .spin.show{display:block;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* ── Toasts ── */
+    .tc{position:fixed;top:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:11px;pointer-events:none;}
+    .toast{display:flex;align-items:center;gap:11px;padding:15px 19px;border-radius:var(--radius-sm);box-shadow:0 8px 32px rgba(0,0,0,.13);font-size:.86rem;font-weight:500;color:#fff;min-width:285px;pointer-events:all;animation:tin .4s cubic-bezier(.4,0,.2,1) both;}
+    .toast.hide{animation:tout .35s cubic-bezier(.4,0,.2,1) both;}
+    @keyframes tin{from{opacity:0;transform:translateX(60px);}to{opacity:1;transform:translateX(0);}}
+    @keyframes tout{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(60px);}}
+    .toast.ok  {background:linear-gradient(135deg,#059669,#10b981);}
+    .toast.err {background:linear-gradient(135deg,#dc2626,#ef4444);}
+    .toast.inf {background:linear-gradient(135deg,var(--primary),#1a7bd5);}
+    .ti{font-size:17px;flex-shrink:0;}
+    .tt{flex:1;line-height:1.4;}
+    .tx{cursor:pointer;opacity:.7;flex-shrink:0;}
+    .tx:hover{opacity:1;}
+
+    /* ── Redirect overlay ── */
+    .overlay{display:none;position:fixed;inset:0;z-index:10000;background:linear-gradient(135deg,#0a3d6b,#0a5eb0 60%,#00c9a7);align-items:center;justify-content:center;flex-direction:column;gap:22px;}
+    .overlay.show{display:flex;animation:fadeIn .5s ease both;}
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+    .ov-icon{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:36px;color:#fff;animation:pop .5s cubic-bezier(.4,0,.2,1) .2s both;}
+    @keyframes pop{from{transform:scale(.6);opacity:0;}to{transform:scale(1);opacity:1;}}
+    .ov-title{font-family:'Playfair Display',serif;font-size:1.6rem;color:#fff;text-align:center;}
+    .ov-sub{font-size:.85rem;color:rgba(255,255,255,.75);text-align:center;}
+    .ov-bar{width:220px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;overflow:hidden;margin-top:8px;}
+    .ov-fill{height:100%;background:var(--accent);border-radius:2px;animation:fill 2s linear .5s both;}
+    @keyframes fill{from{width:0;}to{width:100%;}}
+
+    /* ── Footer links ── */
+    .fl{text-align:center;font-size:.81rem;color:var(--text-light);margin-top:16px;}
+    .fl span{color:var(--primary);font-weight:600;cursor:pointer;}
+    .fl span:hover{text-decoration:underline;}
+    .terms{font-size:.72rem;color:var(--text-light);text-align:center;margin-top:12px;line-height:1.5;}
+    .terms a{color:var(--primary);}
+
+    /* ── Responsive ── */
+    @media(max-width:768px){.lp{display:none;}.rp{padding:38px 26px;}}
+    @media(max-width:480px){.rp{padding:30px 18px;}}
+  </style>
+</head>
+<body>
+
+<div class="bg-layer"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="tc" id="tc"></div>
+
+<!-- ── Login success redirect overlay ── -->
+<div class="overlay" id="overlay">
+  <div class="ov-icon"><i class="fas fa-circle-check"></i></div>
+  <div class="ov-title">Login Successful!</div>
+  <div class="ov-sub" id="ovSub">Redirecting to DocReview…</div>
+  <div class="ov-bar"><div class="ov-fill"></div></div>
+</div>
+
+<div class="pw">
+  <div class="card">
+
+    <!-- LEFT PANEL -->
+    <div class="lp">
+      <div class="lp-logo"><i class="fas fa-hospital-alt"></i></div>
+      <h2 class="lp-title">Graphic Era<br><span>Hospital</span></h2>
+      <p class="lp-sub">The official patient review platform. Find, rate, and review specialist doctors — trusted and verified.</p>
+      <div class="lp-feats">
+        <div class="lp-feat"><i class="fas fa-database"></i><span>Credentials stored in MongoDB Atlas</span></div>
+        <div class="lp-feat"><i class="fas fa-shield-halved"></i><span>FastAPI + JWT authentication</span></div>
+        <div class="lp-feat"><i class="fas fa-lock"></i><span>bcrypt password hashing (12 rounds)</span></div>
+        <div class="lp-feat"><i class="fas fa-circle-check"></i><span>Verified patient reviews only</span></div>
+      </div>
+      <div class="lp-badge"><i class="fas fa-server"></i> FastAPI · MongoDB Atlas · JWT</div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="rp">
+      <div class="db-pill"><i class="fas fa-circle"></i> Live API – FastAPI + MongoDB</div>
+
+      <div class="tabs">
+        <div class="tab active" id="tl" onclick="switchTab('login')">
+          <i class="fas fa-right-to-bracket" style="margin-right:5px;"></i>Login
+        </div>
+        <div class="tab" id="tr" onclick="switchTab('register')">
+          <i class="fas fa-user-plus" style="margin-right:5px;"></i>Register
+        </div>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div class="panel active" id="pl">
+        <div class="fh">
+          <h2>Welcome back 👋</h2>
+          <p>Sign in to your DocReview account at<br><strong style="color:var(--primary)">Graphic Era Hospital</strong></p>
+        </div>
+        <form id="lf" novalidate>
+          <div class="ig">
+            <label>Email Address</label>
+            <div class="iw">
+              <i class="fas fa-envelope ico"></i>
+              <input type="email" id="le" placeholder="you@example.com" autocomplete="email"/>
+            </div>
+            <span class="fm" id="lem"></span>
+          </div>
+          <div class="ig">
+            <label>Password</label>
+            <div class="iw">
+              <i class="fas fa-lock ico"></i>
+              <input type="password" id="lp2" placeholder="Enter your password" autocomplete="current-password"/>
+              <i class="fas fa-eye eye" id="lpe" onclick="togglePw('lp2','lpe')"></i>
+            </div>
+            <span class="fm" id="lpm"></span>
+          </div>
+          <button type="submit" class="btn" id="lb">
+            <div class="spin" id="ls"></div>
+            <i class="fas fa-right-to-bracket" id="li"></i>
+            <span id="lt">Sign In to DocReview</span>
+          </button>
+        </form>
+        <div class="fl" style="margin-top:18px;">Don't have an account? <span onclick="switchTab('register')">Create one here</span></div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div class="panel" id="pr">
+        <div class="fh">
+          <h2>Create Account ✨</h2>
+          <p>Join DocReview at <strong style="color:var(--primary)">Graphic Era Hospital</strong></p>
+        </div>
+        <form id="rf" novalidate>
+          <div class="ig">
+            <label>Full Name</label>
+            <div class="iw">
+              <i class="fas fa-user ico"></i>
+              <input type="text" id="rn" placeholder="Your Full Name" autocomplete="name"/>
+            </div>
+            <span class="fm" id="rnm"></span>
+          </div>
+          <div class="ig">
+            <label>Email Address</label>
+            <div class="iw">
+              <i class="fas fa-envelope ico"></i>
+              <input type="email" id="re" placeholder="you@example.com" autocomplete="email"/>
+            </div>
+            <span class="fm" id="rem"></span>
+          </div>
+          <div class="ig">
+            <label>Password</label>
+            <div class="iw">
+              <i class="fas fa-lock ico"></i>
+              <input type="password" id="rp2" placeholder="Min. 6 characters" autocomplete="new-password" oninput="strength(this.value)"/>
+              <i class="fas fa-eye eye" id="rpe" onclick="togglePw('rp2','rpe')"></i>
+            </div>
+            <span class="fm" id="rpm"></span>
+            <div class="pws" id="pws">
+              <div class="bars">
+                <div class="bar" id="b1"></div>
+                <div class="bar" id="b2"></div>
+                <div class="bar" id="b3"></div>
+              </div>
+              <span class="pw-lbl" id="pwl">Too short</span>
+            </div>
+          </div>
+          <button type="submit" class="btn" id="rb">
+            <div class="spin" id="rs"></div>
+            <i class="fas fa-user-plus" id="ri"></i>
+            <span id="rt">Create My Account</span>
+          </button>
+        </form>
+        <div class="terms">By registering you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</div>
+        <div class="fl">Already have an account? <span onclick="switchTab('login')">Sign in here</span></div>
+      </div>
+
+    </div><!-- end rp -->
+  </div><!-- end card -->
+</div><!-- end pw -->
+
+<script>
+  /* ─── CONFIG ──────────────────────────────────────────────────
+     Change API_BASE to match wherever your FastAPI server runs.
+     Default: http://localhost:8000
+  ─────────────────────────────────────────────────────────────── */
+  const API_BASE    = 'http://localhost:8000';
+  const REDIRECT_TO = 'index.html';   // after successful login
+
+  /* ─── Storage helpers ─────────────────────────────────────── */
+  const setToken = t  => localStorage.setItem('dr_token', t);
+  const getToken = () => localStorage.getItem('dr_token');
+  const setUser  = u  => localStorage.setItem('dr_user',  JSON.stringify(u));
+  const getUser  = () => JSON.parse(localStorage.getItem('dr_user') || 'null');
+  const clearAuth= () => { localStorage.removeItem('dr_token'); localStorage.removeItem('dr_user'); };
+
+  /* ─── Toast ───────────────────────────────────────────────── */
+  function toast(msg, type = 'inf', dur = 3800) {
+    const icons = { ok:'fa-circle-check', err:'fa-circle-xmark', inf:'fa-circle-info' };
+    const c = document.getElementById('tc');
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `<i class="fas ${icons[type]} ti"></i><span class="tt">${msg}</span><i class="fas fa-xmark tx" onclick="this.parentElement.remove()"></i>`;
+    c.appendChild(t);
+    setTimeout(() => { t.classList.add('hide'); setTimeout(() => t.remove(), 380); }, dur);
+  }
+
+  /* ─── Field helpers ───────────────────────────────────────── */
+  function msg(id, text, type) {
+    const el = document.getElementById(id);
+    el.className = `fm show ${type}`;
+    el.innerHTML = `<i class="fas ${type==='err'?'fa-triangle-exclamation':'fa-circle-check'}"></i> ${text}`;
+  }
+  function clr(id) { const el = document.getElementById(id); el.className='fm'; el.textContent=''; }
+  function fi(id, state) {
+    const el = document.getElementById(id);
+    el.classList.remove('ef','sf');
+    if (state==='e') el.classList.add('ef');
+    if (state==='s') el.classList.add('sf');
+  }
+  function clearAll() {
+    [['le','lem'],['lp2','lpm'],['rn','rnm'],['re','rem'],['rp2','rpm']].forEach(([f,m]) => {
+      clr(m); fi(f, null);
+    });
+  }
+
+  /* ─── Tab switcher ────────────────────────────────────────── */
+  function switchTab(t) {
+    document.getElementById('tl').classList.toggle('active', t==='login');
+    document.getElementById('tr').classList.toggle('active', t==='register');
+    document.getElementById('pl').classList.toggle('active', t==='login');
+    document.getElementById('pr').classList.toggle('active', t==='register');
+    clearAll();
+    // Re-trigger animation
+    const p = document.getElementById(t==='login'?'pl':'pr');
+    p.style.animation='none'; p.offsetHeight; p.style.animation='';
+  }
+
+  /* ─── Toggle password visibility ─────────────────────────── */
+  function togglePw(inp, ico) {
+    const i = document.getElementById(inp), e = document.getElementById(ico);
+    i.type = i.type==='password' ? 'text' : 'password';
+    e.classList.toggle('fa-eye', i.type==='password');
+    e.classList.toggle('fa-eye-slash', i.type==='text');
+  }
+
+  /* ─── Password strength meter ─────────────────────────────── */
+  function strength(v) {
+    const el = document.getElementById('pws');
+    const [b1,b2,b3] = [1,2,3].map(n => document.getElementById('b'+n));
+    const lbl = document.getElementById('pwl');
+    if (!v) { el.classList.remove('show'); return; }
+    el.classList.add('show');
+    let sc = 0;
+    if (v.length >= 6)  sc++;
+    if (v.length >= 10) sc++;
+    if (/[A-Z]/.test(v) && /[0-9]/.test(v)) sc++;
+    [b1,b2,b3].forEach(b => b.className='bar');
+    const cls = ['','w','m','s'];
+    const lbs = ['Too short','Weak','Medium','Strong'];
+    for (let i=0;i<sc;i++) if([b1,b2,b3][i]) [b1,b2,b3][i].classList.add(cls[sc]);
+    lbl.textContent = lbs[sc]; lbl.className = 'pw-lbl ' + (cls[sc]||'');
+  }
+
+  /* ─── Button loading state ────────────────────────────────── */
+  function loading(btn, spin, icon, text, on, defaultText) {
+    document.getElementById(btn).disabled = on;
+    document.getElementById(spin).classList.toggle('show', on);
+    document.getElementById(icon).style.display = on ? 'none' : '';
+    document.getElementById(text).textContent = on ? 'Please wait…' : defaultText;
+  }
+
+  /* ─── API fetch wrapper ───────────────────────────────────── */
+  async function api(endpoint, method, body, token=null) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    const res  = await fetch(API_BASE + endpoint, { method, headers, body: body ? JSON.stringify(body) : undefined });
+    const data = await res.json();
+    return { ok: res.ok, status: res.status, data };
+  }
+
+  /* ─── Email validator ────────────────────────────────────── */
+  const isEmail = e => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+
+  /* ─── Show redirect overlay then navigate ─────────────────── */
+  function redirectToHome(userName) {
+    document.getElementById('ovSub').textContent = `Welcome, ${userName}! Loading DocReview…`;
+    document.getElementById('overlay').classList.add('show');
+    setTimeout(() => { window.location.href = REDIRECT_TO; }, 2600);
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     REGISTER
+  ══════════════════════════════════════════════════════════ */
+  document.getElementById('rf').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    const name  = document.getElementById('rn').value.trim();
+    const email = document.getElementById('re').value.trim();
+    const pw    = document.getElementById('rp2').value;
+
+    if (!name || name.length < 2) {
+      msg('rnm','Full name must be at least 2 characters.','err'); fi('rn','e'); valid=false;
+    } else { msg('rnm','Looks good!','ok'); fi('rn','s'); }
+
+    if (!email || !isEmail(email)) {
+      msg('rem','Please enter a valid email address.','err'); fi('re','e'); valid=false;
+    } else { clr('rem'); fi('re', null); }
+
+    if (!pw || pw.length < 6) {
+      msg('rpm','Password must be at least 6 characters.','err'); fi('rp2','e'); valid=false;
+    } else { msg('rpm','Password strength OK!','ok'); fi('rp2','s'); }
+
+    if (!valid) return;
+
+    loading('rb','rs','ri','rt', true, 'Create My Account');
+
+    try {
+      const { ok, data } = await api('/api/auth/register', 'POST', { name, email, password: pw });
+
+      if (!ok) {
+        // FastAPI wraps detail in .detail (could be string or our dict)
+        const d = data.detail || {};
+        const errMsg = typeof d === 'string' ? d : d.message || 'Registration failed.';
+        const field  = typeof d === 'object' ? d.field : null;
+        if (field === 'email' || errMsg.toLowerCase().includes('email')) {
+          msg('rem', errMsg, 'err'); fi('re','e');
+        } else {
+          toast(errMsg, 'err');
+        }
+        return;
+      }
+
+      toast(`Account created for <strong>${name}</strong>! Please sign in. 🎉`, 'ok', 4200);
+      this.reset(); clearAll();
+      document.getElementById('pws').classList.remove('show');
+      setTimeout(() => switchTab('login'), 1300);
+
+    } catch {
+      toast('Cannot reach the server. Make sure FastAPI is running on port 8000.', 'err', 5500);
+    } finally {
+      loading('rb','rs','ri','rt', false, 'Create My Account');
+    }
+  });
+
+  /* ══════════════════════════════════════════════════════════
+     LOGIN
+  ══════════════════════════════════════════════════════════ */
+  document.getElementById('lf').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    const email = document.getElementById('le').value.trim();
+    const pw    = document.getElementById('lp2').value;
+
+    if (!email || !isEmail(email)) {
+      msg('lem','Please enter a valid email address.','err'); fi('le','e'); valid=false;
+    } else { clr('lem'); fi('le',null); }
+
+    if (!pw) {
+      msg('lpm','Password is required.','err'); fi('lp2','e'); valid=false;
+    } else { clr('lpm'); fi('lp2',null); }
+
+    if (!valid) return;
+
+    loading('lb','ls','li','lt', true, 'Sign In to DocReview');
+
+    try {
+      const { ok, data } = await api('/api/auth/login', 'POST', { email, password: pw });
+
+      if (!ok) {
+        const d = data.detail || {};
+        const errMsg = typeof d === 'string' ? d : d.message || 'Login failed.';
+        const field  = typeof d === 'object' ? d.field : null;
+        if (field === 'email') { msg('lem', errMsg, 'err'); fi('le','e'); }
+        else if (field === 'password') { msg('lpm', errMsg, 'err'); fi('lp2','e'); }
+        else { toast(errMsg, 'err'); }
+        return;
+      }
+
+      // ✅ Persist token + user
+      setToken(data.token);
+      setUser(data.user);
+
+      fi('le','s'); fi('lp2','s');
+      toast(`Login successful! Welcome back, <strong>${data.user.name}</strong> 🎉`, 'ok', 2500);
+
+      // Redirect overlay → index.html
+      setTimeout(() => redirectToHome(data.user.name), 700);
+
+    } catch {
+      toast('Cannot reach the server. Make sure FastAPI is running on port 8000.', 'err', 5500);
+    } finally {
+      loading('lb','ls','li','lt', false, 'Sign In to DocReview');
+    }
+  });
+
+  /* ─── Auto-verify session on page load ─────────────────────
+     If a valid token exists, skip login and redirect immediately.
+  ─────────────────────────────────────────────────────────── */
+  (async () => {
+    const token = getToken();
+    const user  = getUser();
+    if (!token || !user) return;
+
+    try {
+      const { ok, data } = await api('/api/auth/me', 'GET', null, token);
+      if (ok) {
+        // Token still valid – redirect silently
+        setUser(data.user);
+        redirectToHome(data.user.name);
+      } else {
+        clearAuth(); // token expired / invalid
+      }
+    } catch {
+      // Server offline – don't redirect, just show login
+    }
+  })();
+
+  /* ─── Focus icon colour sync ─────────────────────────────── */
+  document.querySelectorAll('.iw input').forEach(inp => {
+    inp.addEventListener('focus', () => {
+      const ic = inp.previousElementSibling;
+      if (ic?.classList.contains('ico')) ic.style.color = 'var(--primary)';
+    });
+    inp.addEventListener('blur', () => {
+      const ic = inp.previousElementSibling;
+      if (ic?.classList.contains('ico')) ic.style.color = '';
+    });
+  });
+</script>
+</body>
+</html>

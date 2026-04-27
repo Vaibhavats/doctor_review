@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Write a Review – DocReview | Graphic Era Hospital</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --primary:       #0a5eb0;
+      --primary-dark:  #063d7a;
+      --primary-light: #e8f1fb;
+      --accent:        #00c9a7;
+      --warn:          #f59e0b;
+      --danger:        #ef4444;
+      --success:       #10b981;
+      --text-dark:     #0f172a;
+      --text-mid:      #334155;
+      --text-light:    #64748b;
+      --bg:            #f0f6ff;
+      --border:        #dbeafe;
+      --white:         #ffffff;
+      --radius:        18px;
+      --radius-sm:     11px;
+      --shadow:        0 8px 32px rgba(10,94,176,0.10);
+      --shadow-lg:     0 24px 64px rgba(10,94,176,0.16);
+      --tr:            0.28s cubic-bezier(.4,0,.2,1);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text-dark); min-height:100vh; }
+
+    /* ── Navbar ── */
+    .navbar {
+      position:sticky; top:0; z-index:100;
+      background:rgba(255,255,255,0.96); backdrop-filter:blur(14px);
+      border-bottom:1.5px solid var(--border);
+      padding:0 5%; height:68px;
+      display:flex; align-items:center; justify-content:space-between;
+      box-shadow:0 2px 16px rgba(10,94,176,0.07);
+    }
+    .nav-brand { display:flex; align-items:center; gap:11px; text-decoration:none; }
+    .nav-logo  { width:42px; height:42px; border-radius:11px; background:linear-gradient(135deg,var(--primary),var(--accent)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:19px; }
+    .nav-brand-text strong { display:block; font-size:.95rem; font-weight:800; color:var(--primary-dark); }
+    .nav-brand-text span   { font-size:.68rem; color:var(--text-light); }
+    .nav-right { display:flex; align-items:center; gap:10px; }
+    .nav-user  { display:flex; align-items:center; gap:7px; font-size:.82rem; font-weight:600; color:var(--text-mid); }
+    .nav-avatar{ width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--accent)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:.75rem; font-weight:700; }
+    .btn-back  { display:flex; align-items:center; gap:6px; padding:8px 16px; background:var(--bg); border:1.5px solid var(--border); border-radius:50px; font-size:.80rem; font-weight:600; color:var(--text-mid); cursor:pointer; font-family:'Poppins',sans-serif; transition:all var(--tr); }
+    .btn-back:hover { background:var(--primary-light); color:var(--primary); border-color:var(--border); }
+
+    /* ── Hero strip ── */
+    .hero-strip {
+      background:linear-gradient(135deg,#0a3d6b 0%,#0a5eb0 55%,#1a7bd5 100%);
+      padding:36px 5% 32px; position:relative; overflow:hidden;
+    }
+    .hero-strip::before {
+      content:''; position:absolute; inset:0;
+      background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hs-blob { position:absolute; border-radius:50%; filter:blur(60px); opacity:.18; }
+    .hs-blob-1 { width:320px; height:320px; background:#00c9a7; top:-120px; right:-60px; }
+    .hs-inner { position:relative; z-index:1; }
+    .hs-pill { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.9); padding:4px 12px; border-radius:50px; font-size:.72rem; font-weight:500; margin-bottom:12px; }
+    .hs-pill i { color:var(--accent); }
+    .hero-strip h1 { font-family:'Playfair Display',serif; font-size:clamp(1.5rem,3.5vw,2.2rem); color:#fff; margin-bottom:6px; }
+    .hero-strip h1 span { font-style:italic; color:var(--accent); }
+    .hero-strip p  { font-size:.84rem; color:rgba(255,255,255,0.75); max-width:480px; line-height:1.65; }
+
+    /* ── Page layout ── */
+    .page-wrap { max-width:1000px; margin:0 auto; padding:36px 20px 64px; display:grid; grid-template-columns:1fr 360px; gap:28px; align-items:start; }
+
+    /* ── STEP CARD (left col) ── */
+    .step-card {
+      background:#fff; border-radius:var(--radius); border:1.5px solid var(--border);
+      box-shadow:var(--shadow); overflow:hidden;
+    }
+
+    /* Step header */
+    .step-header {
+      display:flex; align-items:center; gap:14px;
+      padding:22px 26px; border-bottom:1.5px solid var(--border);
+      background:var(--bg);
+    }
+    .step-num {
+      width:38px; height:38px; border-radius:50%; flex-shrink:0;
+      background:linear-gradient(135deg,var(--primary),#1a7bd5);
+      color:#fff; font-weight:800; font-size:.95rem;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 4px 12px rgba(10,94,176,0.28);
+    }
+    .step-num.done { background:linear-gradient(135deg,var(--success),#34d399); }
+    .step-num.locked { background:#e2e8f0; color:var(--text-light); box-shadow:none; }
+    .step-header-text strong { display:block; font-size:.92rem; font-weight:700; color:var(--text-dark); }
+    .step-header-text span   { font-size:.76rem; color:var(--text-light); }
+
+    .step-body { padding:26px; }
+
+    /* ── Step 1: Doctor info ── */
+    .doctor-info-card {
+      display:flex; align-items:center; gap:16px;
+      background:var(--primary-light); border:1.5px solid var(--border);
+      border-radius:var(--radius-sm); padding:16px 18px; margin-bottom:20px;
+    }
+    .di-avatar {
+      width:56px; height:56px; border-radius:50%; flex-shrink:0;
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-size:1.3rem;
+    }
+    .di-name  { font-size:.98rem; font-weight:700; color:var(--text-dark); margin-bottom:3px; }
+    .di-spec  { font-size:.78rem; color:var(--primary); font-weight:600; }
+    .di-dept  { font-size:.72rem; color:var(--text-light); margin-top:2px; }
+
+    /* ── Step 2: Appointment verify ── */
+    .appt-input-wrap {
+      display:flex; gap:10px; align-items:flex-start;
+      flex-wrap:wrap;
+    }
+    .appt-input-group { flex:1; min-width:0; }
+    .appt-input-group label { display:block; font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--text-mid); margin-bottom:7px; }
+    .input-row { position:relative; }
+    .input-row i.ico { position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--text-light); font-size:14px; pointer-events:none; }
+    .input-row input {
+      width:100%; padding:12px 14px 12px 38px;
+      border:1.8px solid var(--border); border-radius:var(--radius-sm);
+      font-size:.88rem; font-family:'Poppins',sans-serif; color:var(--text-dark);
+      background:#fff; outline:none; text-transform:uppercase; letter-spacing:.5px;
+      transition:all var(--tr);
+    }
+    .input-row input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(10,94,176,.10); }
+    .input-row input.ef { border-color:var(--danger); box-shadow:0 0 0 3px rgba(239,68,68,.10); }
+    .input-row input.sf { border-color:var(--success); box-shadow:0 0 0 3px rgba(16,185,129,.10); }
+    .field-msg { font-size:.73rem; margin-top:5px; display:none; align-items:center; gap:4px; }
+    .field-msg.show { display:flex; }
+    .field-msg.err  { color:var(--danger); }
+    .field-msg.ok   { color:var(--success); }
+
+    .btn-verify {
+      padding:12px 22px; background:linear-gradient(135deg,var(--primary),#1a7bd5);
+      color:#fff; border:none; border-radius:var(--radius-sm);
+      font-size:.85rem; font-weight:700; font-family:'Poppins',sans-serif;
+      cursor:pointer; box-shadow:0 4px 14px rgba(10,94,176,0.28);
+      transition:all var(--tr); display:flex; align-items:center; gap:7px;
+      white-space:nowrap; margin-top:24px;
+    }
+    .btn-verify:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 20px rgba(10,94,176,0.35); }
+    .btn-verify:disabled { opacity:.6; cursor:not-allowed; }
+
+    /* Demo hint */
+    .demo-hint {
+      background:linear-gradient(135deg,#fffbeb,#fef9c3);
+      border:1.5px solid #fde68a; border-radius:var(--radius-sm);
+      padding:14px 16px; margin-top:16px; font-size:.78rem; color:#92400e;
+      display:flex; gap:10px; align-items:flex-start;
+    }
+    .demo-hint i { color:var(--warn); font-size:15px; flex-shrink:0; margin-top:1px; }
+    .demo-hint strong { display:block; margin-bottom:4px; }
+    .demo-appt-list { display:flex; flex-direction:column; gap:4px; margin-top:6px; }
+    .demo-appt-btn {
+      display:inline-flex; align-items:center; gap:6px;
+      background:#fff; border:1px solid #fbbf24; border-radius:6px;
+      padding:4px 10px; font-size:.74rem; font-weight:600; color:#92400e;
+      cursor:pointer; font-family:'Poppins',sans-serif; transition:all var(--tr);
+      width:fit-content;
+    }
+    .demo-appt-btn:hover { background:#fef3c7; }
+
+    /* Verified badge */
+    .verified-banner {
+      display:none; align-items:center; gap:12px;
+      background:linear-gradient(135deg,#ecfdf5,#d1fae5);
+      border:1.5px solid #a7f3d0; border-radius:var(--radius-sm);
+      padding:14px 18px; margin-top:14px;
+    }
+    .verified-banner.show { display:flex; }
+    .verified-banner i { font-size:22px; color:var(--success); flex-shrink:0; }
+    .verified-banner strong { display:block; font-size:.88rem; font-weight:700; color:#065f46; }
+    .verified-banner span   { font-size:.76rem; color:#047857; }
+
+    /* ── Step 3: Review form ── */
+    .review-form-section { display:none; }
+    .review-form-section.show { display:block; }
+
+    /* Star selector */
+    .star-selector { display:flex; flex-direction:column; gap:8px; margin-bottom:22px; }
+    .star-label  { font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--text-mid); }
+    .star-input  { display:flex; gap:6px; }
+    .star-input input { display:none; }
+    .star-input label {
+      font-size:2rem; color:#e2e8f0; cursor:pointer;
+      transition:all .15s ease; line-height:1;
+    }
+    .star-input label:hover,
+    .star-input label.active { color:var(--warn); transform:scale(1.15); }
+    .star-desc { font-size:.78rem; color:var(--text-light); min-height:18px; }
+    .star-desc.s1 { color:var(--danger); }
+    .star-desc.s2 { color:#f97316; }
+    .star-desc.s3 { color:var(--warn); }
+    .star-desc.s4 { color:#84cc16; }
+    .star-desc.s5 { color:var(--success); }
+
+    /* Form inputs */
+    .fg { margin-bottom:18px; }
+    .fg label { display:block; font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--text-mid); margin-bottom:7px; }
+    .fg input, .fg textarea {
+      width:100%; padding:12px 14px;
+      border:1.8px solid var(--border); border-radius:var(--radius-sm);
+      font-size:.88rem; font-family:'Poppins',sans-serif; color:var(--text-dark);
+      background:#fff; outline:none; transition:all var(--tr); resize:vertical;
+    }
+    .fg input:focus, .fg textarea:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(10,94,176,.10); }
+    .fg input.ef, .fg textarea.ef { border-color:var(--danger); }
+    .fg-hint { font-size:.72rem; color:var(--text-light); margin-top:5px; }
+    .char-count { font-size:.70rem; color:var(--text-light); text-align:right; margin-top:3px; }
+    .char-count.warn { color:var(--danger); }
+
+    /* Anonymous toggle */
+    .anon-toggle {
+      display:flex; align-items:center; gap:12px;
+      background:var(--bg); border:1.5px solid var(--border); border-radius:var(--radius-sm);
+      padding:13px 16px; margin-bottom:22px; cursor:pointer;
+    }
+    .toggle-switch { position:relative; width:40px; height:22px; flex-shrink:0; }
+    .toggle-switch input { opacity:0; width:0; height:0; }
+    .toggle-track {
+      position:absolute; inset:0; border-radius:22px;
+      background:#e2e8f0; transition:background var(--tr);
+    }
+    .toggle-thumb {
+      position:absolute; width:16px; height:16px; border-radius:50%;
+      background:#fff; top:3px; left:3px;
+      box-shadow:0 1px 4px rgba(0,0,0,0.2);
+      transition:transform var(--tr);
+    }
+    .toggle-switch input:checked ~ .toggle-track { background:var(--primary); }
+    .toggle-switch input:checked ~ .toggle-thumb { transform:translateX(18px); }
+    .anon-text strong { display:block; font-size:.84rem; font-weight:600; color:var(--text-dark); }
+    .anon-text span   { font-size:.73rem; color:var(--text-light); }
+
+    /* Submit button */
+    .btn-submit-review {
+      width:100%; padding:14px;
+      background:linear-gradient(135deg,var(--primary),#1a7bd5);
+      color:#fff; border:none; border-radius:var(--radius-sm);
+      font-size:.95rem; font-weight:700; font-family:'Poppins',sans-serif;
+      cursor:pointer; box-shadow:0 6px 20px rgba(10,94,176,0.30);
+      transition:all var(--tr); display:flex; align-items:center; justify-content:center; gap:8px;
+      position:relative; overflow:hidden;
+    }
+    .btn-submit-review::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#1a7bd5,var(--accent)); opacity:0; transition:opacity var(--tr); }
+    .btn-submit-review:hover:not(:disabled)::before { opacity:1; }
+    .btn-submit-review:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 10px 28px rgba(10,94,176,0.38); }
+    .btn-submit-review:disabled { opacity:.6; cursor:not-allowed; }
+    .btn-submit-review > * { position:relative; z-index:1; }
+    .spin { width:17px; height:17px; border:2.5px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; display:none; }
+    .spin.show { display:block; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* ── Success screen ── */
+    .success-screen {
+      display:none; text-align:center; padding:48px 28px;
+      animation:popIn .5s cubic-bezier(.4,0,.2,1);
+    }
+    .success-screen.show { display:block; }
+    @keyframes popIn { from{opacity:0;transform:scale(.92);} to{opacity:1;transform:scale(1);} }
+    .success-icon {
+      width:80px; height:80px; border-radius:50%;
+      background:linear-gradient(135deg,var(--success),#34d399);
+      display:flex; align-items:center; justify-content:center;
+      font-size:36px; color:#fff; margin:0 auto 20px;
+      box-shadow:0 8px 24px rgba(16,185,129,0.35);
+    }
+    .success-screen h2 { font-size:1.5rem; font-weight:800; color:var(--text-dark); margin-bottom:10px; }
+    .success-screen p  { font-size:.88rem; color:var(--text-light); margin-bottom:24px; line-height:1.7; }
+    .success-stars { font-size:1.8rem; color:var(--warn); margin-bottom:8px; }
+    .success-review-title { font-size:.92rem; font-weight:700; color:var(--text-dark); margin-bottom:6px; }
+    .success-review-text  { font-size:.82rem; color:var(--text-mid); line-height:1.65; background:var(--bg); border-radius:var(--radius-sm); padding:14px; border:1.5px solid var(--border); }
+    .success-actions { display:flex; gap:12px; justify-content:center; margin-top:22px; flex-wrap:wrap; }
+    .btn-go { padding:11px 24px; border-radius:50px; font-size:.85rem; font-weight:700; font-family:'Poppins',sans-serif; cursor:pointer; transition:all var(--tr); }
+    .btn-go-primary  { background:var(--primary); color:#fff; border:2px solid var(--primary); box-shadow:0 4px 12px rgba(10,94,176,0.28); }
+    .btn-go-primary:hover  { background:var(--primary-dark); }
+    .btn-go-outline  { background:transparent; color:var(--text-mid); border:1.5px solid var(--border); }
+    .btn-go-outline:hover  { border-color:var(--primary); color:var(--primary); }
+
+    /* ── Right sidebar: how it works + reviews list ── */
+    .sidebar-col { display:flex; flex-direction:column; gap:22px; }
+
+    .side-card {
+      background:#fff; border-radius:var(--radius); border:1.5px solid var(--border);
+      box-shadow:var(--shadow); padding:22px;
+    }
+    .sc-title { font-size:.80rem; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--text-light); margin-bottom:16px; display:flex; align-items:center; gap:7px; }
+    .sc-title i { color:var(--primary); font-size:13px; }
+
+    /* How it works steps */
+    .how-steps { display:flex; flex-direction:column; gap:14px; }
+    .how-step  { display:flex; align-items:flex-start; gap:12px; }
+    .hs-num    { width:26px; height:26px; border-radius:50%; background:var(--primary-light); color:var(--primary); font-size:.72rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .hs-num.done { background:linear-gradient(135deg,var(--success),#34d399); color:#fff; }
+    .hs-txt strong { display:block; font-size:.82rem; font-weight:700; color:var(--text-dark); margin-bottom:1px; }
+    .hs-txt span   { font-size:.74rem; color:var(--text-light); line-height:1.45; }
+
+    /* Recent reviews */
+    .review-card {
+      border-bottom:1.5px solid var(--bg); padding-bottom:14px; margin-bottom:14px;
+    }
+    .review-card:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+    .rc-top { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .rc-avatar { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--accent)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:.75rem; font-weight:700; flex-shrink:0; }
+    .rc-meta strong { display:block; font-size:.80rem; font-weight:700; color:var(--text-dark); }
+    .rc-meta span   { font-size:.70rem; color:var(--text-light); }
+    .rc-stars { display:flex; gap:2px; margin-bottom:5px; }
+    .rc-stars i { font-size:.72rem; color:#e2e8f0; }
+    .rc-stars i.f { color:var(--warn); }
+    .rc-title { font-size:.80rem; font-weight:700; color:var(--text-dark); margin-bottom:3px; }
+    .rc-text  { font-size:.76rem; color:var(--text-mid); line-height:1.55; }
+    .no-reviews { text-align:center; padding:20px 0; font-size:.82rem; color:var(--text-light); }
+    .no-reviews i { display:block; font-size:28px; color:var(--border); margin-bottom:8px; }
+
+    /* ── Toast ── */
+    .tc { position:fixed; top:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:10px; pointer-events:none; }
+    .toast { display:flex; align-items:center; gap:10px; padding:13px 17px; border-radius:var(--radius-sm); font-size:.84rem; font-weight:500; color:#fff; min-width:260px; max-width:340px; pointer-events:all; box-shadow:0 8px 28px rgba(0,0,0,0.12); animation:tin .32s cubic-bezier(.4,0,.2,1) both; }
+    .toast.hide { animation:tout .28s cubic-bezier(.4,0,.2,1) both; }
+    @keyframes tin  { from{opacity:0;transform:translateX(46px);}  to{opacity:1;transform:translateX(0);} }
+    @keyframes tout { from{opacity:1;transform:translateX(0);}  to{opacity:0;transform:translateX(46px);} }
+    .toast.ok  { background:linear-gradient(135deg,#059669,#10b981); }
+    .toast.err { background:linear-gradient(135deg,#dc2626,#ef4444); }
+    .toast.inf { background:linear-gradient(135deg,var(--primary),#1a7bd5); }
+    .tc-x { cursor:pointer; opacity:.7; margin-left:auto; flex-shrink:0; }
+    .tc-x:hover { opacity:1; }
+
+    /* ── Responsive ── */
+    @media(max-width:820px) {
+      .page-wrap { grid-template-columns:1fr; }
+      .sidebar-col { display:none; }
+    }
+    @media(max-width:480px) {
+      .page-wrap { padding:20px 12px 48px; }
+      .step-body { padding:18px; }
+      .appt-input-wrap { flex-direction:column; }
+      .btn-verify { width:100%; justify-content:center; margin-top:12px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="tc" id="tc"></div>
+
+<!-- ══ NAVBAR ════════════════════════════════════════════════ -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo"><i class="fas fa-hospital-alt"></i></div>
+    <div class="nav-brand-text">
+      <strong>Graphic Era Hospital</strong>
+      <span>DocReview Platform</span>
+    </div>
+  </a>
+  <div class="nav-right">
+    <button class="btn-back" onclick="history.back()">
+      <i class="fas fa-arrow-left"></i> Back to Doctors
+    </button>
+    <div class="nav-user" id="navUser"></div>
+  </div>
+</nav>
+
+<!-- ══ HERO STRIP ════════════════════════════════════════════ -->
+<div class="hero-strip">
+  <div class="hs-blob hs-blob-1"></div>
+  <div class="hs-inner">
+    <div class="hs-pill"><i class="fas fa-star"></i> Patient Review System</div>
+    <h1>Share Your <span>Experience</span></h1>
+    <p>Verify your appointment, rate your doctor, and help future patients make informed decisions at Graphic Era Hospital.</p>
+  </div>
+</div>
+
+<!-- ══ PAGE CONTENT ══════════════════════════════════════════ -->
+<div class="page-wrap">
+
+  <!-- ── LEFT COLUMN: steps ── -->
+  <div>
+
+    <!-- STEP 1: Doctor card -->
+    <div class="step-card" style="margin-bottom:20px;">
+      <div class="step-header">
+        <div class="step-num done" id="step1Num"><i class="fas fa-check"></i></div>
+        <div class="step-header-text">
+          <strong>Doctor Selected</strong>
+          <span>You are reviewing this doctor</span>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="doctor-info-card" id="doctorInfoCard">
+          <div class="di-avatar" id="diAvatar"><i class="fas fa-user-doctor"></i></div>
+          <div>
+            <div class="di-name" id="diName">Loading…</div>
+            <div class="di-spec" id="diSpec"></div>
+            <div class="di-dept" id="diDept"></div>
+          </div>
+        </div>
+        <p style="font-size:.78rem;color:var(--text-light);">
+          <i class="fas fa-circle-info" style="color:var(--primary);margin-right:5px;"></i>
+          Wrong doctor? <a href="doctors.html" style="color:var(--primary);font-weight:600;">Go back and select another</a>.
+        </p>
+      </div>
+    </div>
+
+    <!-- STEP 2: Appointment verification -->
+    <div class="step-card" style="margin-bottom:20px;" id="step2Card">
+      <div class="step-header">
+        <div class="step-num" id="step2Num">2</div>
+        <div class="step-header-text">
+          <strong>Verify Your Appointment</strong>
+          <span>Enter your appointment ID to unlock the review form</span>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="appt-input-wrap">
+          <div class="appt-input-group">
+            <label for="apptInput">Appointment ID</label>
+            <div class="input-row">
+              <i class="fas fa-id-badge ico"></i>
+              <input type="text" id="apptInput" placeholder="e.g. GEH-2026-00001"
+                     oninput="this.value=this.value.toUpperCase(); clearVerify()"/>
+            </div>
+            <span class="field-msg" id="apptMsg"></span>
+          </div>
+          <button class="btn-verify" id="verifyBtn" onclick="verifyAppointment()">
+            <div class="spin" id="verifySpin"></div>
+            <i class="fas fa-shield-check" id="verifyIcon"></i>
+            <span id="verifyText">Verify</span>
+          </button>
+        </div>
+
+        <!-- Demo hint: populated by JS -->
+        <div class="demo-hint" id="demoHint" style="display:none;">
+          <i class="fas fa-lightbulb"></i>
+          <div>
+            <strong>Your Appointment IDs for this doctor:</strong>
+            <div class="demo-appt-list" id="demoList"></div>
+          </div>
+        </div>
+
+        <!-- Verified success banner -->
+        <div class="verified-banner" id="verifiedBanner">
+          <i class="fas fa-circle-check"></i>
+          <div>
+            <strong>Appointment Verified!</strong>
+            <span id="verifiedMsg">You may now proceed to submit your review.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Review form (unlocked after verification) -->
+    <div class="step-card" id="step3Card">
+      <div class="step-header">
+        <div class="step-num locked" id="step3Num"><i class="fas fa-lock"></i></div>
+        <div class="step-header-text">
+          <strong>Write Your Review</strong>
+          <span id="step3Sub">Verify your appointment first to unlock this step</span>
+        </div>
+      </div>
+      <div class="step-body">
+
+        <!-- Locked placeholder -->
+        <div id="lockedPlaceholder" style="text-align:center;padding:32px 0;">
+          <i class="fas fa-lock" style="font-size:40px;color:var(--border);margin-bottom:12px;display:block;"></i>
+          <p style="font-size:.85rem;color:var(--text-light);">Complete appointment verification above to unlock the review form.</p>
+        </div>
+
+        <!-- Actual review form (hidden until verified) -->
+        <div class="review-form-section" id="reviewForm">
+
+          <!-- Star rating -->
+          <div class="star-selector">
+            <div class="star-label">Your Rating <span style="color:var(--danger)">*</span></div>
+            <div class="star-input" id="starInput">
+              <input type="radio" name="rating" id="r1" value="1"/>
+              <label for="r1" title="Poor">★</label>
+              <input type="radio" name="rating" id="r2" value="2"/>
+              <label for="r2" title="Fair">★</label>
+              <input type="radio" name="rating" id="r3" value="3"/>
+              <label for="r3" title="Good">★</label>
+              <input type="radio" name="rating" id="r4" value="4"/>
+              <label for="r4" title="Very Good">★</label>
+              <input type="radio" name="rating" id="r5" value="5"/>
+              <label for="r5" title="Excellent">★</label>
+            </div>
+            <div class="star-desc" id="starDesc">Click to rate</div>
+          </div>
+
+          <!-- Review title -->
+          <div class="fg">
+            <label for="reviewTitle">Review Title <span style="color:var(--danger)">*</span></label>
+            <input type="text" id="reviewTitle" maxlength="120"
+                   placeholder="e.g. Excellent doctor, very thorough and caring"
+                   oninput="updateCharCount('reviewTitle','titleCount',120)"/>
+            <div class="char-count" id="titleCount">0 / 120</div>
+            <span class="field-msg" id="titleMsg"></span>
+          </div>
+
+          <!-- Feedback -->
+          <div class="fg">
+            <label for="reviewFeedback">Detailed Feedback <span style="color:var(--danger)">*</span></label>
+            <textarea id="reviewFeedback" rows="5" maxlength="1500"
+                      placeholder="Describe your experience in detail — diagnosis quality, communication, wait time, staff behaviour, and anything else patients should know…"
+                      oninput="updateCharCount('reviewFeedback','feedbackCount',1500)"></textarea>
+            <div class="char-count" id="feedbackCount">0 / 1500</div>
+            <p class="fg-hint"><i class="fas fa-circle-info" style="color:var(--primary);font-size:11px;"></i> Minimum 10 characters. Be honest and respectful.</p>
+            <span class="field-msg" id="feedbackMsg"></span>
+          </div>
+
+          <!-- Anonymous toggle -->
+          <label class="anon-toggle" for="anonToggle">
+            <label class="toggle-switch" onclick="event.stopPropagation()">
+              <input type="checkbox" id="anonToggle"/>
+              <div class="toggle-track"></div>
+              <div class="toggle-thumb"></div>
+            </label>
+            <div class="anon-text">
+              <strong>Post Anonymously</strong>
+              <span>Your name will be hidden from the public review</span>
+            </div>
+          </label>
+
+          <!-- Submit -->
+          <button class="btn-submit-review" id="submitBtn" onclick="submitReview()">
+            <div class="spin" id="submitSpin"></div>
+            <i class="fas fa-paper-plane" id="submitIcon"></i>
+            <span id="submitText">Submit Review</span>
+          </button>
+        </div>
+
+        <!-- Success screen (after submit) -->
+        <div class="success-screen" id="successScreen">
+          <div class="success-icon"><i class="fas fa-circle-check"></i></div>
+          <div class="success-stars" id="successStars"></div>
+          <h2>Review Submitted!</h2>
+          <p>Thank you for sharing your experience. Your review helps other patients make informed healthcare decisions at Graphic Era Hospital.</p>
+          <div class="success-review-title" id="successTitle"></div>
+          <div class="success-review-text"  id="successText"></div>
+          <div class="success-actions">
+            <button class="btn-go btn-go-primary" onclick="location.href='doctors.html'">
+              <i class="fas fa-user-doctor"></i> View All Doctors
+            </button>
+            <button class="btn-go btn-go-outline" onclick="location.href='index.html'">
+              <i class="fas fa-house"></i> Home
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT COLUMN: sidebar ── -->
+  <div class="sidebar-col">
+
+    <!-- How it works -->
+    <div class="side-card">
+      <div class="sc-title"><i class="fas fa-list-check"></i> How It Works</div>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="hs-num done" id="hw1">1</div>
+          <div class="hs-txt">
+            <strong>Select a Doctor</strong>
+            <span>Browse Graphic Era Hospital doctors and click "Write a Review"</span>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="hs-num" id="hw2">2</div>
+          <div class="hs-txt">
+            <strong>Verify Appointment ID</strong>
+            <span>Enter the appointment ID from your hospital visit receipt</span>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="hs-num" id="hw3">3</div>
+          <div class="hs-txt">
+            <strong>Rate &amp; Review</strong>
+            <span>Give a 1–5 star rating and write detailed honest feedback</span>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="hs-num" id="hw4">4</div>
+          <div class="hs-txt">
+            <strong>Submit</strong>
+            <span>Your review is published to help future patients</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent reviews for this doctor -->
+    <div class="side-card">
+      <div class="sc-title"><i class="fas fa-comments"></i> Recent Reviews</div>
+      <div id="recentReviews">
+        <div class="no-reviews"><i class="fas fa-comment-slash"></i>Loading reviews…</div>
+      </div>
+    </div>
+
+    <!-- Rules card -->
+    <div class="side-card">
+      <div class="sc-title"><i class="fas fa-shield-halved"></i> Review Policy</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <i class="fas fa-circle-check" style="color:var(--success);margin-top:2px;font-size:13px;flex-shrink:0;"></i>
+          <span style="font-size:.78rem;color:var(--text-mid);">One review per patient per doctor</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <i class="fas fa-circle-check" style="color:var(--success);margin-top:2px;font-size:13px;flex-shrink:0;"></i>
+          <span style="font-size:.78rem;color:var(--text-mid);">Valid appointment ID required</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <i class="fas fa-circle-check" style="color:var(--success);margin-top:2px;font-size:13px;flex-shrink:0;"></i>
+          <span style="font-size:.78rem;color:var(--text-mid);">Reviews may be posted anonymously</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <i class="fas fa-circle-check" style="color:var(--success);margin-top:2px;font-size:13px;flex-shrink:0;"></i>
+          <span style="font-size:.78rem;color:var(--text-mid);">Respectful, honest feedback only</span>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <i class="fas fa-circle-check" style="color:var(--success);margin-top:2px;font-size:13px;flex-shrink:0;"></i>
+          <span style="font-size:.78rem;color:var(--text-mid);">All reviews visible to other patients</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ─── CONFIG ─────────────────────────────────────────────── */
+const API = 'http://localhost:8000';
+
+/* ─── Auth ────────────────────────────────────────────────── */
+const getToken = () => localStorage.getItem('dr_token');
+const getUser  = () => JSON.parse(localStorage.getItem('dr_user') || 'null');
+
+/* ─── State ───────────────────────────────────────────────── */
+let doctorId   = null;
+let doctorData = null;
+let verifiedApptId = null;
+let selectedRating = 0;
+
+/* ─── Guard: must be logged in ────────────────────────────── */
+(function authGuard() {
+  if (!getToken() || !getUser()) {
+    toast('Please login to write a review.', 'inf', 3000);
+    setTimeout(() => { window.location.href = 'auth.html'; }, 1800);
+    return;
+  }
+  // Render user in navbar
+  const user = getUser();
+  const init = user.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('navUser').innerHTML = `
+    <div class="nav-avatar">${init}</div>
+    <span style="font-size:.82rem;font-weight:600;color:var(--text-mid);">${user.name.split(' ')[0]}</span>`;
+})();
+
+/* ─── Toast ───────────────────────────────────────────────── */
+function toast(msg, type='inf', dur=3500) {
+  const icons = {ok:'fa-circle-check', err:'fa-circle-xmark', inf:'fa-circle-info'};
+  const c = document.getElementById('tc');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fas ${icons[type]}"></i><span style="flex:1;line-height:1.4">${msg}</span><i class="fas fa-xmark tc-x" onclick="this.parentElement.remove()"></i>`;
+  c.appendChild(t);
+  setTimeout(()=>{ t.classList.add('hide'); setTimeout(()=>t.remove(), 300); }, dur);
+}
+
+/* ─── Field helpers ───────────────────────────────────────── */
+function setMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.className = `field-msg show ${type}`;
+  el.innerHTML = `<i class="fas ${type==='err'?'fa-triangle-exclamation':'fa-circle-check'}"></i> ${text}`;
+}
+function clrMsg(id) { const el=document.getElementById(id); el.className='field-msg'; el.textContent=''; }
+function fi(id, s) { const el=document.getElementById(id); el.classList.remove('ef','sf'); if(s==='e') el.classList.add('ef'); if(s==='s') el.classList.add('sf'); }
+
+/* ─── Char counter ────────────────────────────────────────── */
+function updateCharCount(inputId, countId, max) {
+  const len = document.getElementById(inputId).value.length;
+  const el  = document.getElementById(countId);
+  el.textContent = `${len} / ${max}`;
+  el.classList.toggle('warn', len > max * 0.9);
+}
+
+/* ─── Star rating ─────────────────────────────────────────── */
+const starDescs = ['', 'Poor – Very disappointed', 'Fair – Below expectations', 'Good – Satisfactory experience', 'Very Good – Would recommend', 'Excellent – Outstanding doctor!'];
+const starClasses = ['', 's1', 's2', 's3', 's4', 's5'];
+
+document.querySelectorAll('.star-input label').forEach((lbl, idx) => {
+  lbl.addEventListener('click', () => {
+    selectedRating = idx + 1;
+    updateStars(selectedRating);
+  });
+  lbl.addEventListener('mouseover', () => previewStars(idx + 1));
+  lbl.addEventListener('mouseout',  () => updateStars(selectedRating));
+});
+
+function updateStars(val) {
+  document.querySelectorAll('.star-input label').forEach((l, i) => {
+    l.classList.toggle('active', i < val);
+  });
+  const desc = document.getElementById('starDesc');
+  desc.textContent = starDescs[val] || 'Click to rate';
+  desc.className = 'star-desc ' + (starClasses[val] || '');
+}
+function previewStars(val) {
+  document.querySelectorAll('.star-input label').forEach((l, i) => l.classList.toggle('active', i < val));
+}
+
+/* ─── Load doctor data ────────────────────────────────────── */
+async function loadDoctor(id) {
+  try {
+    const res  = await fetch(`${API}/api/doctors/${id}`);
+    if (!res.ok) throw new Error();
+    const { doctor } = await res.json();
+    doctorData = doctor;
+
+    const icons = {
+      Cardiology:'fa-heart-pulse', Neurology:'fa-brain', Orthopedics:'fa-bone',
+      Pediatrics:'fa-baby', Dermatology:'fa-hand-dots', Oncology:'fa-ribbon',
+      Gynecology:'fa-venus', Ophthalmology:'fa-eye', 'General Medicine':'fa-stethoscope',
+    };
+    const icon = icons[doctor.department] || 'fa-user-doctor';
+    document.getElementById('diAvatar').innerHTML = `<i class="fas ${icon}" style="font-size:1.3rem;"></i>`;
+    document.getElementById('diName').textContent = doctor.name;
+    document.getElementById('diSpec').textContent = doctor.specialization;
+    document.getElementById('diDept').textContent = `${doctor.department} · ${doctor.experience_years} yrs experience`;
+
+    loadMyAppointments(id);
+    loadRecentReviews(id);
+  } catch {
+    toast('Could not load doctor details.', 'err');
+  }
+}
+
+/* ─── Load my appointment IDs for this doctor ─────────────── */
+async function loadMyAppointments(id) {
+  try {
+    const res  = await fetch(`${API}/api/appointments/mine?doctor_id=${id}`, {
+      headers: { Authorization: 'Bearer ' + getToken() },
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data.appointments || !data.appointments.length) return;
+
+    const hint = document.getElementById('demoHint');
+    const list = document.getElementById('demoList');
+    hint.style.display = 'flex';
+    list.innerHTML = data.appointments.map(a => `
+      <button class="demo-appt-btn" onclick="useApptId('${a.appointment_id}')">
+        <i class="fas fa-ticket"></i> ${a.appointment_id}
+      </button>`).join('');
+  } catch {}
+}
+
+function useApptId(id) {
+  document.getElementById('apptInput').value = id;
+  clearVerify();
+}
+
+/* ─── Load recent reviews ─────────────────────────────────── */
+async function loadRecentReviews(id) {
+  try {
+    const res  = await fetch(`${API}/api/reviews?doctor_id=${id}&per_page=4`);
+    const data = await res.json();
+    const el   = document.getElementById('recentReviews');
+
+    if (!data.reviews || !data.reviews.length) {
+      el.innerHTML = `<div class="no-reviews"><i class="fas fa-comment-slash"></i>No reviews yet. Be the first!</div>`;
+      return;
+    }
+
+    el.innerHTML = data.reviews.map(r => {
+      const stars = Array.from({length:5}, (_,i) =>
+        `<i class="fas fa-star ${i < r.rating ? 'f' : ''}"></i>`).join('');
+      const init = r.patient_name === 'Anonymous' ? '?' :
+        r.patient_name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      const date = new Date(r.created_at).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+      return `<div class="review-card">
+        <div class="rc-top">
+          <div class="rc-avatar">${init}</div>
+          <div class="rc-meta">
+            <strong>${r.patient_name}</strong>
+            <span>${date}</span>
+          </div>
+        </div>
+        <div class="rc-stars">${stars}</div>
+        <div class="rc-title">${r.title}</div>
+        <div class="rc-text">${r.feedback.slice(0,140)}${r.feedback.length>140?'…':''}</div>
+      </div>`;
+    }).join('');
+  } catch {}
+}
+
+/* ─── Verify appointment ──────────────────────────────────── */
+function clearVerify() {
+  verifiedApptId = null;
+  document.getElementById('verifiedBanner').classList.remove('show');
+  clrMsg('apptMsg');
+  fi('apptInput', null);
+  lockStep3();
+}
+
+async function verifyAppointment() {
+  const apptId = document.getElementById('apptInput').value.trim().toUpperCase();
+  if (!apptId) { setMsg('apptMsg','Please enter your appointment ID.','err'); fi('apptInput','e'); return; }
+  if (!doctorId) { toast('Doctor not loaded. Please go back.','err'); return; }
+
+  setLoading('verifyBtn','verifySpin','verifyIcon','verifyText', true);
+
+  try {
+    const res  = await fetch(`${API}/api/appointments/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', Authorization:'Bearer '+getToken() },
+      body: JSON.stringify({ appointment_id: apptId, doctor_id: doctorId }),
+    });
+    const data = await res.json();
+
+    if (!data.valid) {
+      setMsg('apptMsg', data.message, 'err');
+      fi('apptInput', 'e');
+      document.getElementById('verifiedBanner').classList.remove('show');
+      lockStep3();
+      return;
+    }
+
+    // ✅ Verified
+    verifiedApptId = apptId;
+    setMsg('apptMsg', 'Appointment verified!', 'ok');
+    fi('apptInput', 's');
+    document.getElementById('verifiedMsg').textContent =
+      `Verified for ${data.doctor_name || (doctorData && doctorData.name) || 'this doctor'}.`;
+    document.getElementById('verifiedBanner').classList.add('show');
+    unlockStep3();
+    // Mark how-it-works step 2 done
+    document.getElementById('hw2').classList.add('done');
+
+  } catch {
+    toast('Cannot reach server. Is FastAPI running on port 8000?', 'err', 5000);
+  } finally {
+    setLoading('verifyBtn','verifySpin','verifyIcon','verifyText', false);
+  }
+}
+
+function lockStep3() {
+  document.getElementById('step3Num').className = 'step-num locked';
+  document.getElementById('step3Num').innerHTML = '<i class="fas fa-lock"></i>';
+  document.getElementById('step3Sub').textContent = 'Verify your appointment first to unlock this step';
+  document.getElementById('lockedPlaceholder').style.display = 'block';
+  document.getElementById('reviewForm').classList.remove('show');
+  document.getElementById('successScreen').classList.remove('show');
+}
+
+function unlockStep3() {
+  document.getElementById('step3Num').className = 'step-num';
+  document.getElementById('step3Num').textContent = '3';
+  document.getElementById('step3Sub').textContent = 'Rate your experience and write your review';
+  document.getElementById('lockedPlaceholder').style.display = 'none';
+  document.getElementById('reviewForm').classList.add('show');
+  // Scroll to form
+  document.getElementById('step3Card').scrollIntoView({ behavior:'smooth', block:'start' });
+  document.getElementById('hw3').classList.add('done');
+}
+
+/* ─── Submit review ───────────────────────────────────────── */
+async function submitReview() {
+  if (!verifiedApptId) { toast('Please verify your appointment first.','err'); return; }
+
+  let valid = true;
+
+  if (!selectedRating) {
+    toast('Please select a star rating.','err'); valid = false;
+  }
+
+  const title    = document.getElementById('reviewTitle').value.trim();
+  const feedback = document.getElementById('reviewFeedback').value.trim();
+  const anon     = document.getElementById('anonToggle').checked;
+
+  if (!title || title.length < 3) {
+    setMsg('titleMsg','Review title must be at least 3 characters.','err');
+    fi('reviewTitle','e'); valid = false;
+  } else { clrMsg('titleMsg'); fi('reviewTitle','s'); }
+
+  if (!feedback || feedback.length < 10) {
+    setMsg('feedbackMsg','Feedback must be at least 10 characters.','err');
+    fi('reviewFeedback','e'); valid = false;
+  } else { clrMsg('feedbackMsg'); fi('reviewFeedback','s'); }
+
+  if (!valid) return;
+
+  setLoading('submitBtn','submitSpin','submitIcon','submitText', true);
+
+  try {
+    const res  = await fetch(`${API}/api/reviews`, {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', Authorization:'Bearer '+getToken() },
+      body: JSON.stringify({
+        doctor_id:      doctorId,
+        appointment_id: verifiedApptId,
+        rating:         selectedRating,
+        title,
+        feedback,
+        is_anonymous:   anon,
+      }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      const d = data.detail || {};
+      const m = typeof d === 'string' ? d : d.message || 'Submission failed.';
+      toast(m, 'err', 5000);
+      if (typeof d === 'object' && d.field === 'appointment_id') {
+        setMsg('apptMsg', m, 'err'); fi('apptInput','e');
+      }
+      return;
+    }
+
+    // ✅ Success
+    showSuccessScreen(data.review, selectedRating, title, feedback);
+    document.getElementById('hw4').classList.add('done');
+    document.getElementById('step3Num').className = 'step-num done';
+    document.getElementById('step3Num').innerHTML = '<i class="fas fa-check"></i>';
+    document.getElementById('step2Num').className = 'step-num done';
+    document.getElementById('step2Num').innerHTML = '<i class="fas fa-check"></i>';
+
+  } catch {
+    toast('Cannot reach server. Is FastAPI running on port 8000?','err',5000);
+  } finally {
+    setLoading('submitBtn','submitSpin','submitIcon','submitText', false);
+  }
+}
+
+function showSuccessScreen(review, rating, title, feedback) {
+  document.getElementById('reviewForm').classList.remove('show');
+  const sc = document.getElementById('successScreen');
+  sc.classList.add('show');
+
+  const stars = Array.from({length:5}, (_,i) => i < rating ? '★' : '☆').join('');
+  document.getElementById('successStars').textContent    = stars;
+  document.getElementById('successTitle').textContent    = `"${title}"`;
+  document.getElementById('successText').textContent     = feedback;
+  sc.scrollIntoView({ behavior:'smooth', block:'center' });
+  toast('Review submitted successfully! 🎉', 'ok', 4000);
+  // Refresh reviews sidebar
+  if (doctorId) loadRecentReviews(doctorId);
+}
+
+/* ─── Button loading state ────────────────────────────────── */
+function setLoading(btnId, spinId, iconId, textId, on) {
+  document.getElementById(btnId).disabled = on;
+  document.getElementById(spinId).classList.toggle('show', on);
+  document.getElementById(iconId).style.display = on ? 'none' : '';
+  document.getElementById(textId).textContent   = on ? 'Please wait…' : (btnId==='verifyBtn'?'Verify':'Submit Review');
+}
+
+/* ─── INIT ────────────────────────────────────────────────── */
+(function init() {
+  // Read doctor ID from query string or localStorage
+  const params  = new URLSearchParams(window.location.search);
+  const qId     = params.get('doctor_id');
+  const stored  = JSON.parse(localStorage.getItem('dr_review_target') || 'null');
+
+  doctorId = qId || (stored && stored.id) || null;
+
+  if (!doctorId) {
+    toast('No doctor selected. Redirecting…','inf',2500);
+    setTimeout(() => { window.location.href = 'doctors.html'; }, 2000);
+    return;
+  }
+
+  // Pre-fill name if we have it from localStorage
+  if (stored && stored.name && !qId) {
+    document.getElementById('diName').textContent = stored.name;
+  }
+
+  loadDoctor(doctorId);
+
+  // Clear stored target so back-navigation works cleanly
+  localStorage.removeItem('dr_review_target');
+})();
+</script>
+</body>
+</html>

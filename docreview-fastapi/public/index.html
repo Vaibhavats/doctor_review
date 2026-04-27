@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DocReview – Graphic Era Hospital</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --primary: #0a5eb0;
+      --primary-dark: #063d7a;
+      --primary-light: #e8f1fb;
+      --accent: #00c9a7;
+      --accent-warm: #f59e0b;
+      --text-dark: #0f172a;
+      --text-mid: #334155;
+      --text-light: #64748b;
+      --white: #ffffff;
+      --bg-light: #f0f6ff;
+      --border: #dbeafe;
+      --card-shadow: 0 8px 32px rgba(10,94,176,0.10);
+      --radius: 18px;
+      --radius-sm: 10px;
+      --transition: 0.3s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--white);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1.5px solid var(--border);
+      padding: 0 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+      box-shadow: 0 2px 16px rgba(10,94,176,0.07);
+      transition: box-shadow var(--transition);
+    }
+    .navbar.scrolled { box-shadow: 0 4px 24px rgba(10,94,176,0.13); }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+    .nav-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: var(--primary-light);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .nav-logo-placeholder {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .nav-logo-placeholder i { color: #fff; font-size: 22px; }
+    .nav-title {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    .nav-title span:first-child {
+      font-weight: 800;
+      font-size: 1.08rem;
+      color: var(--primary-dark);
+      letter-spacing: -0.3px;
+    }
+    .nav-title span:last-child {
+      font-size: 0.72rem;
+      color: var(--text-light);
+      font-weight: 400;
+      letter-spacing: 0.4px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+    .nav-links a {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-mid);
+      border-radius: var(--radius-sm);
+      transition: all var(--transition);
+    }
+    .nav-links a:hover { background: var(--primary-light); color: var(--primary); }
+    .nav-links a.active { color: var(--primary); font-weight: 600; }
+
+    .nav-cta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn-outline-nav {
+      padding: 9px 20px;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      background: transparent;
+      transition: all var(--transition);
+    }
+    .btn-outline-nav:hover { background: var(--primary); color: #fff; }
+    .btn-filled-nav {
+      padding: 9px 22px;
+      background: linear-gradient(135deg, var(--primary), #1a7bd5);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(10,94,176,0.28);
+      transition: all var(--transition);
+    }
+    .btn-filled-nav:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,94,176,0.38); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+    }
+    .hamburger span {
+      width: 26px;
+      height: 2.5px;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: all var(--transition);
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 72px;
+      left: 0; right: 0;
+      background: #fff;
+      border-bottom: 2px solid var(--border);
+      padding: 20px 5%;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 999;
+      box-shadow: 0 8px 32px rgba(10,94,176,0.10);
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      padding: 13px 16px;
+      font-weight: 500;
+      color: var(--text-mid);
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      transition: all var(--transition);
+    }
+    .mobile-menu a:hover { background: var(--primary-light); color: var(--primary); }
+    .mobile-menu .mobile-btns {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .mobile-menu .mobile-btns button { flex: 1; }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 92vh;
+      background: linear-gradient(135deg, #0a3d6b 0%, #0a5eb0 45%, #1a7bd5 75%, #00c9a7 100%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 80px 5% 60px;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    /* Decorative circles */
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      top: -120px; right: -80px;
+      pointer-events: none;
+    }
+    .hero-blob {
+      position: absolute;
+      width: 380px; height: 380px;
+      border-radius: 50%;
+      background: rgba(0,201,167,0.12);
+      bottom: -100px; right: 15%;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 640px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      padding: 7px 16px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 28px;
+      backdrop-filter: blur(10px);
+    }
+    .hero-badge i { color: var(--accent); }
+
+    .hero-content h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      color: #fff;
+      line-height: 1.18;
+      margin-bottom: 22px;
+      font-weight: 700;
+    }
+    .hero-content h1 span {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-content p {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.75;
+      margin-bottom: 38px;
+      max-width: 520px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-hero-primary {
+      padding: 15px 34px;
+      background: #fff;
+      color: var(--primary-dark);
+      border: none;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+      transition: all var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-hero-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.22);
+    }
+    .btn-hero-secondary {
+      padding: 15px 34px;
+      background: transparent;
+      color: #fff;
+      border: 2px solid rgba(255,255,255,0.5);
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: all var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(6px);
+    }
+    .btn-hero-secondary:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.8);
+      transform: translateY(-3px);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 56px;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .stat-item strong {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+    .stat-item span {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 500;
+    }
+    .stat-divider {
+      width: 1px;
+      background: rgba(255,255,255,0.2);
+      align-self: stretch;
+    }
+
+    /* Floating card on hero right */
+    .hero-visual {
+      position: absolute;
+      right: 6%;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .floating-card {
+      background: rgba(255,255,255,0.97);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+      backdrop-filter: blur(10px);
+      animation: float 3.5s ease-in-out infinite;
+      min-width: 230px;
+    }
+    .floating-card:nth-child(2) { animation-delay: -1.2s; margin-left: 30px; }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .fc-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .fc-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+    .fc-info strong {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+    .fc-info span {
+      font-size: 0.73rem;
+      color: var(--text-light);
+    }
+    .fc-stars { color: var(--accent-warm); font-size: 0.82rem; }
+    .fc-review { font-size: 0.78rem; color: var(--text-mid); line-height: 1.5; }
+    .fc-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ecfdf5;
+      color: #059669;
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    /* ===== SECTION COMMON ===== */
+    section { padding: 96px 5%; }
+    .section-label {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 5px 16px;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 3.5vw, 2.7rem);
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+    .section-sub {
+      font-size: 1rem;
+      color: var(--text-light);
+      line-height: 1.7;
+      max-width: 540px;
+    }
+    .section-head { margin-bottom: 56px; }
+    .text-center { text-align: center; }
+    .text-center .section-sub { margin: 0 auto; }
+
+    /* ===== FEATURES ===== */
+    .features { background: var(--bg-light); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 28px;
+    }
+    .feature-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 36px 30px;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--card-shadow);
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(10,94,176,0.14);
+    }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon {
+      width: 58px; height: 58px;
+      border-radius: 16px;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--primary);
+      margin-bottom: 22px;
+      transition: all var(--transition);
+    }
+    .feature-card:hover .feature-icon {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff;
+    }
+    .feature-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+    }
+    .feature-card p {
+      font-size: 0.88rem;
+      color: var(--text-light);
+      line-height: 1.7;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .how-it-works { background: #fff; }
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      position: relative;
+    }
+    .steps-container::before {
+      content: '';
+      position: absolute;
+      top: 46px; left: calc(12.5% + 28px); right: calc(12.5% + 28px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      z-index: 0;
+    }
+    .step-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 32px 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-num {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #1a7bd5);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 20px rgba(10,94,176,0.3);
+      position: relative;
+    }
+    .step-num::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 2px dashed rgba(10,94,176,0.3);
+    }
+    .step-icon {
+      font-size: 28px;
+      color: var(--primary);
+      margin-bottom: 14px;
+    }
+    .step-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+    .step-card p {
+      font-size: 0.84rem;
+      color: var(--text-light);
+      line-height: 1.65;
+    }
+
+    /* ===== DOCTORS ===== */
+    .doctors { background: var(--bg-light); }
+    .doctors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 28px;
+    }
+    .doctor-card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--card-shadow);
+      transition: all var(--transition);
+    }
+    .doctor-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(10,94,176,0.14);
+    }
+    .doctor-cover {
+      height: 100px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      position: relative;
+    }
+    .doctor-cover.c2 { background: linear-gradient(135deg, #6366f1, #a78bfa); }
+    .doctor-cover.c3 { background: linear-gradient(135deg, #0891b2, #06b6d4); }
+    .doctor-cover.c4 { background: linear-gradient(135deg, #059669, #10b981); }
+    .doctor-avatar {
+      width: 76px; height: 76px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      border: 4px solid #fff;
+      position: absolute;
+      bottom: -38px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: var(--primary);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    }
+    .doctor-card.c2 .doctor-avatar { color: #6366f1; }
+    .doctor-card.c3 .doctor-avatar { color: #0891b2; }
+    .doctor-card.c4 .doctor-avatar { color: #059669; }
+    .doctor-body {
+      padding: 52px 22px 26px;
+      text-align: center;
+    }
+    .doctor-name {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 5px;
+    }
+    .doctor-spec {
+      font-size: 0.82rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .doctor-dept {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.76rem;
+      color: var(--text-light);
+      background: var(--bg-light);
+      padding: 4px 12px;
+      border-radius: 50px;
+      margin-bottom: 14px;
+    }
+    .doctor-stars {
+      color: var(--accent-warm);
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+    .doctor-rating-text {
+      font-size: 0.76rem;
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+    .btn-profile {
+      width: 100%;
+      padding: 10px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-profile:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonials { background: linear-gradient(135deg, #0a3d6b 0%, #0a5eb0 100%); }
+    .testimonials .section-label {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+    .testimonials .section-title { color: #fff; }
+    .testimonials .section-sub { color: rgba(255,255,255,0.7); }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+    }
+    .testi-card {
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: var(--radius);
+      padding: 34px 28px;
+      backdrop-filter: blur(10px);
+      transition: all var(--transition);
+    }
+    .testi-card:hover {
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-4px);
+    }
+    .testi-quote {
+      font-size: 2.5rem;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 16px;
+      font-family: 'Playfair Display', serif;
+    }
+    .testi-text {
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.88);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+    .testi-footer {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .testi-avatar {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #0a5eb0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .testi-info strong {
+      display: block;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .testi-info span {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.78rem;
+    }
+    .testi-stars { color: var(--accent-warm); font-size: 0.82rem; margin-top: 3px; }
+
+    /* ===== ABOUT SNIPPET ===== */
+    .about { background: #fff; }
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .about-visual {
+      background: linear-gradient(135deg, var(--primary-light), #dbeafe);
+      border-radius: var(--radius);
+      height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 100px;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid var(--border);
+    }
+    .about-visual::before {
+      content: '';
+      position: absolute;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(10,94,176,0.08);
+      top: -60px; right: -60px;
+    }
+    .about-visual::after {
+      content: '';
+      position: absolute;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: rgba(0,201,167,0.10);
+      bottom: -40px; left: -30px;
+    }
+    .about-icon-main { z-index: 1; }
+    .about-text .section-head { margin-bottom: 30px; }
+    .about-points { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+    .about-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .ap-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .ap-text strong {
+      display: block;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 3px;
+    }
+    .ap-text span { font-size: 0.82rem; color: var(--text-light); line-height: 1.55; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #0a1628;
+      color: rgba(255,255,255,0.75);
+      padding: 72px 5% 0;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-brand .nav-logo-placeholder { margin-bottom: 16px; }
+    .footer-brand-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .footer-brand-sub {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 18px;
+    }
+    .footer-brand p {
+      font-size: 0.84rem;
+      line-height: 1.7;
+      max-width: 280px;
+    }
+    .footer-socials {
+      display: flex;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .footer-socials a {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.7);
+      font-size: 15px;
+      transition: all var(--transition);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .footer-socials a:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .footer-col h4 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 20px;
+    }
+    .footer-col ul li {
+      margin-bottom: 12px;
+    }
+    .footer-col ul li a {
+      font-size: 0.84rem;
+      color: rgba(255,255,255,0.6);
+      transition: color var(--transition);
+    }
+    .footer-col ul li a:hover { color: var(--accent); }
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 0.82rem;
+    }
+    .footer-contact-item i {
+      color: var(--accent);
+      font-size: 14px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom p { font-size: 0.82rem; color: rgba(255,255,255,0.45); }
+    .footer-bottom-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-bottom-links a {
+      font-size: 0.80rem;
+      color: rgba(255,255,255,0.45);
+      transition: color var(--transition);
+    }
+    .footer-bottom-links a:hover { color: var(--accent); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1080px) {
+      .hero-visual { display: none; }
+      .about-inner { grid-template-columns: 1fr; }
+      .about-visual { height: 260px; font-size: 70px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .steps-container::before { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      section { padding: 64px 5%; }
+      .hero { min-height: 80vh; padding: 60px 5%; }
+    }
+    @media (max-width: 520px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .hero-stats { gap: 20px; }
+      .stat-divider { display: none; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ===== UTILITY ===== */
+    .badge-verified {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #ecfdf5;
+      color: #059669;
+      padding: 3px 10px;
+      border-radius: 50px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-brand">
+    <!-- Replace src with your actual logo file -->
+    <div class="nav-logo-placeholder" title="Graphic Era Hospital Logo">
+      <i class="fas fa-hospital-alt"></i>
+      <!-- Alternatively: <img src="logo.png" alt="Graphic Era Hospital Logo" style="width:100%;height:100%;object-fit:cover;border-radius:12px;"> -->
+    </div>
+    <div class="nav-title">
+      <span>Graphic Era Hospital</span>
+      <span>DocReview Platform</span>
+    </div>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="doctors.html">Doctors</a></li>
+  </ul>
+
+  <div class="nav-cta">
+    <button class="btn-outline-nav" onclick="window.location.href='auth.html'">Login</button>
+    <button class="btn-filled-nav" onclick="window.location.href='auth.html'">Register</button>
+  </div>
+
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home" onclick="closeMenu()">Home</a>
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#features" onclick="closeMenu()">Features</a>
+  <a href="doctors.html" onclick="closeMenu()">Doctors</a>
+  <div class="mobile-btns">
+    <button class="btn-outline-nav">Login</button>
+    <button class="btn-filled-nav">Register</button>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="hero-blob"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <i class="fas fa-shield-halved"></i>
+      Trusted by Patients at Graphic Era Hospital
+    </div>
+    <h1>Find the <span>Best Doctors</span> at Graphic Era Hospital</h1>
+    <p>Browse verified patient reviews, explore specialist profiles, and make informed healthcare decisions — all within Graphic Era Hospital's trusted review platform.</p>
+    <div class="hero-btns">
+      <button class="btn-hero-primary">
+        <i class="fas fa-rocket"></i> Get Started
+      </button>
+      <button class="btn-hero-secondary" onclick="window.location.href=\'doctors.html\'">
+        <i class="fas fa-user-doctor"></i> View Doctors
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <strong>50+</strong>
+        <span>Specialist Doctors</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <strong>2,400+</strong>
+        <span>Patient Reviews</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <strong>4.8★</strong>
+        <span>Avg. Hospital Rating</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating doctor review cards -->
+  <div class="hero-visual">
+    <div class="floating-card">
+      <div class="fc-top">
+        <div class="fc-avatar"><i class="fas fa-stethoscope"></i></div>
+        <div class="fc-info">
+          <strong>Dr. Priya Sharma</strong>
+          <span>Cardiologist</span>
+        </div>
+      </div>
+      <div class="fc-stars">
+        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        <i class="fas fa-star"></i><i class="fas fa-star"></i>
+      </div>
+      <p class="fc-review">"Exceptional care and very thorough diagnosis. Highly recommended!"</p>
+      <div class="fc-badge"><i class="fas fa-circle-check"></i> Verified Review</div>
+    </div>
+    <div class="floating-card">
+      <div class="fc-top">
+        <div class="fc-avatar"><i class="fas fa-brain"></i></div>
+        <div class="fc-info">
+          <strong>Dr. Anil Mehta</strong>
+          <span>Neurologist</span>
+        </div>
+      </div>
+      <div class="fc-stars">
+        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        <i class="fas fa-star"></i><i class="far fa-star"></i>
+      </div>
+      <p class="fc-review">"Very knowledgeable. Explained everything clearly and patiently."</p>
+      <div class="fc-badge"><i class="fas fa-circle-check"></i> Verified Review</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="about-visual">
+      <i class="fas fa-hospital-alt about-icon-main"></i>
+    </div>
+    <div class="about-text">
+      <div class="section-head">
+        <span class="section-label">About DocReview</span>
+        <h2 class="section-title">Transparent Healthcare at Graphic Era Hospital</h2>
+        <p class="section-sub">DocReview is the official patient review platform exclusively for Graphic Era Hospital — empowering patients to make confident healthcare decisions through genuine, verified feedback.</p>
+      </div>
+      <div class="about-points">
+        <div class="about-point">
+          <div class="ap-icon"><i class="fas fa-shield-halved"></i></div>
+          <div class="ap-text">
+            <strong>100% Exclusive to Graphic Era Hospital</strong>
+            <span>All doctors listed are verified staff of Graphic Era Hospital. No external listings, ever.</span>
+          </div>
+        </div>
+        <div class="about-point">
+          <div class="ap-icon"><i class="fas fa-lock"></i></div>
+          <div class="ap-text">
+            <strong>JWT-Secured Authentication</strong>
+            <span>Patient data and reviews are protected with industry-standard JSON Web Token security.</span>
+          </div>
+        </div>
+        <div class="about-point">
+          <div class="ap-icon"><i class="fas fa-user-check"></i></div>
+          <div class="ap-text">
+            <strong>One Review Per Doctor Policy</strong>
+            <span>Each registered patient can submit exactly one honest review per doctor — ensuring fairness.</span>
+          </div>
+        </div>
+        <div class="about-point">
+          <div class="ap-icon"><i class="fas fa-gauge-high"></i></div>
+          <div class="ap-text">
+            <strong>Admin Moderation</strong>
+            <span>All reviews pass through hospital admin moderation before publication.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="features" id="features">
+  <div class="section-head text-center">
+    <span class="section-label">Platform Features</span>
+    <h2 class="section-title">Everything You Need to Choose the Right Doctor</h2>
+    <p class="section-sub">DocReview brings transparency and trust to your healthcare journey at Graphic Era Hospital.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-building-columns"></i></div>
+      <h3>Browse by Department</h3>
+      <p>Explore all specialist departments at Graphic Era Hospital — Cardiology, Neurology, Orthopedics, Pediatrics, and more — to find the right expert.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-circle-check"></i></div>
+      <h3>Verified Patient Reviews</h3>
+      <p>Only registered, authenticated patients of Graphic Era Hospital can post reviews — ensuring every rating you read is genuine and trustworthy.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-star"></i></div>
+      <h3>1–5 Star Doctor Ratings</h3>
+      <p>Rate your experience with any doctor using our clear 1–5 star system, with a detailed feedback section to share your full experience.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-lock"></i></div>
+      <h3>JWT Secure Authentication</h3>
+      <p>Your account is protected by JSON Web Token authentication, ensuring that only you can manage your profile and review submissions.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-user-pen"></i></div>
+      <h3>One Review Per Doctor</h3>
+      <p>Each patient may submit one review per doctor. This prevents spam and maintains a fair, unbiased rating environment for everyone.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+      <h3>Admin Review Moderation</h3>
+      <p>Hospital administrators review and approve all submissions before publication, maintaining the integrity of the platform and patient trust.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="how-it-works" id="how">
+  <div class="section-head text-center">
+    <span class="section-label">How It Works</span>
+    <h2 class="section-title">Your Review Journey in 4 Simple Steps</h2>
+    <p class="section-sub">Getting started with DocReview at Graphic Era Hospital is quick, easy, and completely secure.</p>
+  </div>
+  <div class="steps-container">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+      <h3>Register / Login</h3>
+      <p>Create a secure account as a Graphic Era Hospital patient, or log in using your existing credentials.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-icon"><i class="fas fa-magnifying-glass"></i></div>
+      <h3>Browse Doctors</h3>
+      <p>Explore all specialist doctors at Graphic Era Hospital, filtered by department or specialization.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-icon"><i class="fas fa-id-card"></i></div>
+      <h3>View Doctor Profile</h3>
+      <p>Read detailed profiles, view star ratings, and browse authentic patient reviews before your visit.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-icon"><i class="fas fa-comment-medical"></i></div>
+      <h3>Submit Rating & Review</h3>
+      <p>After your appointment, submit your honest 1–5 star rating and detailed feedback to help others.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DOCTORS ===== -->
+<section class="doctors" id="doctors">
+  <div class="section-head text-center">
+    <span class="section-label">Our Specialists</span>
+    <h2 class="section-title">Top-Rated Doctors at Graphic Era Hospital</h2>
+    <p class="section-sub">Meet some of our highly-reviewed specialists — all exclusively serving patients at Graphic Era Hospital.</p>
+  </div>
+  <div class="doctors-grid">
+
+    <!-- Doctor 1 -->
+    <div class="doctor-card">
+      <div class="doctor-cover"></div>
+      <div class="doctor-avatar"><i class="fas fa-stethoscope"></i></div>
+      <div class="doctor-body">
+        <div class="doctor-name">Dr. Priya Sharma</div>
+        <div class="doctor-spec">Senior Cardiologist</div>
+        <div class="doctor-dept"><i class="fas fa-heart-pulse"></i> Cardiology Dept.</div>
+        <div class="doctor-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <div class="doctor-rating-text">4.9 / 5.0 &nbsp;•&nbsp; 128 reviews</div>
+        <span class="badge-verified"><i class="fas fa-circle-check"></i> Verified Staff</span>
+        <button class="btn-profile" style="margin-top:16px;">View Profile & Reviews</button>
+      </div>
+    </div>
+
+    <!-- Doctor 2 -->
+    <div class="doctor-card c2">
+      <div class="doctor-cover c2"></div>
+      <div class="doctor-avatar"><i class="fas fa-brain"></i></div>
+      <div class="doctor-body">
+        <div class="doctor-name">Dr. Anil Mehta</div>
+        <div class="doctor-spec">Chief Neurologist</div>
+        <div class="doctor-dept"><i class="fas fa-brain"></i> Neurology Dept.</div>
+        <div class="doctor-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star-half-stroke"></i>
+        </div>
+        <div class="doctor-rating-text">4.7 / 5.0 &nbsp;•&nbsp; 96 reviews</div>
+        <span class="badge-verified"><i class="fas fa-circle-check"></i> Verified Staff</span>
+        <button class="btn-profile" style="margin-top:16px;">View Profile & Reviews</button>
+      </div>
+    </div>
+
+    <!-- Doctor 3 -->
+    <div class="doctor-card c3">
+      <div class="doctor-cover c3"></div>
+      <div class="doctor-avatar"><i class="fas fa-bone"></i></div>
+      <div class="doctor-body">
+        <div class="doctor-name">Dr. Sunita Rawat</div>
+        <div class="doctor-spec">Orthopedic Surgeon</div>
+        <div class="doctor-dept"><i class="fas fa-person-walking"></i> Orthopedics Dept.</div>
+        <div class="doctor-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <div class="doctor-rating-text">4.8 / 5.0 &nbsp;•&nbsp; 143 reviews</div>
+        <span class="badge-verified"><i class="fas fa-circle-check"></i> Verified Staff</span>
+        <button class="btn-profile" style="margin-top:16px;">View Profile & Reviews</button>
+      </div>
+    </div>
+
+    <!-- Doctor 4 -->
+    <div class="doctor-card c4">
+      <div class="doctor-cover c4"></div>
+      <div class="doctor-avatar"><i class="fas fa-baby"></i></div>
+      <div class="doctor-body">
+        <div class="doctor-name">Dr. Rajan Gupta</div>
+        <div class="doctor-spec">Pediatric Specialist</div>
+        <div class="doctor-dept"><i class="fas fa-children"></i> Pediatrics Dept.</div>
+        <div class="doctor-stars">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star-half-stroke"></i>
+        </div>
+        <div class="doctor-rating-text">4.6 / 5.0 &nbsp;•&nbsp; 81 reviews</div>
+        <span class="badge-verified"><i class="fas fa-circle-check"></i> Verified Staff</span>
+        <button class="btn-profile" style="margin-top:16px;">View Profile & Reviews</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testimonials" id="testimonials">
+  <div class="section-head text-center">
+    <span class="section-label">Patient Testimonials</span>
+    <h2 class="section-title">What Patients Are Saying</h2>
+    <p class="section-sub">Real experiences from patients who found their doctors through DocReview at Graphic Era Hospital.</p>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">DocReview made it so easy to find the right cardiologist at Graphic Era Hospital. I read the verified reviews, felt confident, and Dr. Sharma exceeded my expectations. The platform is a game-changer for patients like me.</p>
+      <div class="testi-footer">
+        <div class="testi-avatar">R</div>
+        <div class="testi-info">
+          <strong>Rohit Bisht</strong>
+          <span>Patient, Cardiology Dept.</span>
+          <div class="testi-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">I was nervous about my child's treatment, but DocReview helped me read genuine reviews from other parents about Dr. Gupta. Knowing he had so many positive ratings gave me real confidence. Truly a helpful platform!</p>
+      <div class="testi-footer">
+        <div class="testi-avatar">N</div>
+        <div class="testi-info">
+          <strong>Neha Arora</strong>
+          <span>Parent, Pediatrics Dept.</span>
+          <div class="testi-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-quote">"</div>
+      <p class="testi-text">After my knee surgery with Dr. Rawat, I was happy to leave a review and help future patients. The one-review-per-doctor policy ensures that ratings are honest. This is exactly what healthcare transparency looks like.</p>
+      <div class="testi-footer">
+        <div class="testi-avatar">V</div>
+        <div class="testi-info">
+          <strong>Vikram Negi</strong>
+          <span>Patient, Orthopedics Dept.</span>
+          <div class="testi-stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star-half-stroke"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo-placeholder" style="margin-bottom:16px;">
+        <i class="fas fa-hospital-alt"></i>
+      </div>
+      <div class="footer-brand-title">Graphic Era Hospital</div>
+      <div class="footer-brand-sub">DocReview Platform</div>
+      <p>Empowering patients with transparent, verified doctor reviews — exclusively for Graphic Era Hospital's community.</p>
+      <div class="footer-socials">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#home"><i class="fas fa-chevron-right" style="font-size:10px;margin-right:6px;color:var(--accent)"></i>Home</a></li>
+        <li><a href="#about"><i class="fas fa-chevron-right" style="font-size:10px;margin-right:6px;color:var(--accent)"></i>About</a></li>
+        <li><a href="#features"><i class="fas fa-chevron-right" style="font-size:10px;margin-right:6px;color:var(--accent)"></i>Features</a></li>
+        <li><a href="doctors.html"><i class="fas fa-chevron-right" style="font-size:10px;margin-right:6px;color:var(--accent)"></i>Doctors</a></li>
+        <li><a href="#testimonials"><i class="fas fa-chevron-right" style="font-size:10px;margin-right:6px;color:var(--accent)"></i>Reviews</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Account</h4>
+      <ul>
+        <li><a href="#"><i class="fas fa-chevron-right" style="font-size:10px;margin-right:6px;color:var(--accent)"></i>Register</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right" style="font-size:10px;margin-right:6px;color:var(--accent)"></i>Login</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right" style="font-size:10px;margin-right:6px;color:var(--accent)"></i>My Reviews</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right" style="font-size:10px;margin-right:6px;color:var(--accent)"></i>Privacy Policy</a></li>
+        <li><a href="#"><i class="fas fa-chevron-right" style="font-size:10px;margin-right:6px;color:var(--accent)"></i>Terms of Use</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item">
+        <i class="fas fa-location-dot"></i>
+        <span>Graphic Era Hill University Campus, Dehradun, Uttarakhand</span>
+      </div>
+      <div class="footer-contact-item">
+        <i class="fas fa-phone"></i>
+        <span>+91 135 2700 900</span>
+      </div>
+      <div class="footer-contact-item">
+        <i class="fas fa-envelope"></i>
+        <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b7d3d8d4c5d2c1ded2c0f7d0c5d6c7dfded4d2c5d6dfd8c4c7dec3d6db99ded9">[email&#160;protected]</a></span>
+      </div>
+      <div class="footer-contact-item">
+        <i class="fas fa-clock"></i>
+        <span>Mon – Sat: 9:00 AM – 6:00 PM</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 DocReview – Graphic Era Hospital. All rights reserved.</p>
+    <div class="footer-bottom-links">
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Sticky navbar scroll effect
+  window.addEventListener('scroll', () => {
+    const navbar = document.getElementById('navbar');
+    if (window.scrollY > 20) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('section[id], footer[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 90;
+      if (window.scrollY >= sectionTop) current = section.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+    });
+  });
+
+  // Mobile menu toggle
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const burger = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    burger.classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+
+  // Smooth scroll for all anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e)
